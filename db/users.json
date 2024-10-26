@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "nome": "Lucas Pereira",
+    "rg": "99887766-3",
+    "foto_perfil": "fotoPerfilPath",
+    "login": "lucasp",
+    "senha": "luke987",
+    "adm": true,
+    "curso": "Análise e Desenvolvimento de Sistemas",
+    "matricula": "20231005",
+    "data_nascimento": "1998-09-14"
+  }
+]
