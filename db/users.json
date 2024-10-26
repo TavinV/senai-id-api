@@ -10,5 +10,17 @@
     "curso": "Análise e Desenvolvimento de Sistemas",
     "matricula": "20231005",
     "data_nascimento": "1998-09-14"
+  },
+  {
+    "id": 2,
+    "nome": "Otavio Vinícius Flauzino de Souza",
+    "rg": "2391371238",
+    "foto_perfil": "fotoPerfilPath",
+    "login": "12937125",
+    "senha": "senai117@23",
+    "adm": true,
+    "curso": "Técnico em Desnvolvimento de Sistemas",
+    "matricula": "12937125",
+    "data_nascimento": "2007-12-18"
   }
 ]

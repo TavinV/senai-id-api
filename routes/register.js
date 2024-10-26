@@ -57,7 +57,7 @@ router.post('/', upload.single('foto_perfil'), (req, res) => {
         id: users.length + 1,
         nome,
         rg,
-        foto_perfil: 'fotoPerfilPath',
+        foto_perfil: 'foto',
         login,
         senha,
         adm,
