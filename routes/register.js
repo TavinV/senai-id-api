@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
 import fs from 'fs'
-import bodyParser from 'body-parser';
+// import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 
@@ -20,15 +20,20 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, '../db/fotos_perfil'))
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '_pfp_' + path.extname(file.originalname))
+        const matricula = req.body.matricula;
+        if (!matricula) {
+            return cb(new Error("Matrícula é necessária para nomear o arquivo"));
+        }
+        cb(null, `${matricula}_pfp${path.extname(file.originalname)}`);
     }
-})
-const upload = multer({ storage: storage })
+});
+
+const upload = multer({ storage: storage });
 
 router.post('/', upload.single('foto_perfil'), (req, res) => {
 
-    const { nome, rg, foto_perfil, login, senha, adm, curso, data_nascimento, matricula } = req.body;
-    const requiredFields = { nome, rg, login, senha, adm, curso, data_nascimento, matricula, foto_perfil };
+    const { nome, rg, login, senha, adm, curso, data_nascimento, matricula } = req.body;
+    const requiredFields = { nome, rg, login, senha, adm, curso, data_nascimento, matricula };
     const missingFields = Object.keys(requiredFields).filter(field => !requiredFields[field]);
 
     console.log(req.body)
@@ -37,6 +42,9 @@ router.post('/', upload.single('foto_perfil'), (req, res) => {
         return res.status(400).json({
             error: `Campos obrigatórios ausentes: ${missingFields.join(", ")}`
         });
+    }
+    if (!req.file) {
+        return res.status(400).json({ error: "Campo obrigatório ausente: foto_perfil" });
     }
 
     let users = [];
@@ -57,7 +65,7 @@ router.post('/', upload.single('foto_perfil'), (req, res) => {
         id: users.length + 1,
         nome,
         rg,
-        foto_perfil: 'foto',
+        foto_perfil: req.file.filename,
         login,
         senha,
         adm,
