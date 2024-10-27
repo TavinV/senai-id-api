@@ -14,9 +14,21 @@
     "foto_perfil": "24194131_pfp.png",
     "login": "24194131",
     "senha": "senai117@58",
-    "adm": "false",
+    "adm": true,
     "curso": "Técnico em Desenvolvimento de Sistemas",
     "matricula": "24194131",
     "data_nascimento": "2007-12-18"
+  },
+  {
+    "id": 3,
+    "nome": "Igor Teixeira Souza",
+    "rg": "435432213",
+    "foto_perfil": "38143132_pfp.png",
+    "login": "38143132",
+    "senha": "senai117@43",
+    "adm": "false",
+    "curso": "Técnico em Desenvolvimento de Sistemas",
+    "matricula": "38143132",
+    "data_nascimento": "2007-08-27"
   }
 ]
