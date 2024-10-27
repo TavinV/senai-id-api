@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post('/', upload.single('foto_perfil'), (req, res) => {
-
+    console.log('pedido')
     const { nome, rg, login, senha, adm, curso, data_nascimento, matricula } = req.body;
     const requiredFields = { nome, rg, login, senha, adm, curso, data_nascimento, matricula };
     const missingFields = Object.keys(requiredFields).filter(field => !requiredFields[field]);
@@ -77,6 +77,7 @@ router.post('/', upload.single('foto_perfil'), (req, res) => {
     // Adiciona o usuário ao JSON e responde com sucesso
     users.push(newUser);
     fs.writeFileSync(db_file_path, JSON.stringify(users, null, 2));
+    console.log("Usuário registrado com sucesso", newUser)
     res.status(201).json({ message: "Usuário registrado com sucesso", user: newUser });
 
 });

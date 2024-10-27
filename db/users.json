@@ -1,26 +1,22 @@
 [
   {
-    "id": 1,
-    "nome": "Lucas Pereira",
-    "rg": "99887766-3",
-    "foto_perfil": "fotoPerfilPath",
-    "login": "lucasp",
-    "senha": "luke987",
+    "id": 0,
+    "nome": "Secretaria Senai Nami Jafet",
     "adm": true,
-    "curso": "Análise e Desenvolvimento de Sistemas",
-    "matricula": "20231005",
-    "data_nascimento": "1998-09-14"
+    "login": "secretaria117",
+    "senha": "senai117@adm",
+    "foto_perfil": "senai_logo_quadrada"
   },
   {
-    "id": 2,
+    "id": 1,
     "nome": "Otávio Vinícius Flauzino de Souza",
-    "rg": "5817051089",
-    "foto_perfil": "32567236_pfp.png",
-    "login": "32567236",
+    "rg": "581706109",
+    "foto_perfil": "24194131_pfp.png",
+    "login": "24194131",
     "senha": "senai117@58",
-    "adm": "true",
+    "adm": "false",
     "curso": "Técnico em Desenvolvimento de Sistemas",
-    "matricula": "32567236",
+    "matricula": "24194131",
     "data_nascimento": "2007-12-18"
   }
 ]
