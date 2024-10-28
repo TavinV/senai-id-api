@@ -1,16 +1,25 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const auth_jwt = (req, res, next) => {
-    console.log('oi do middleware')
-    const token = req.cookies.token
-    try {
-        const user = jwt.verify(token, process.env.SECRET)
-        req.user = user
-        next()
-    } catch (error) {
-        res.clearCookie("token")
-        return res.redirect('/')
+    const token = req.cookies.token;
+    console.log('-----------------Autenticando--------------------');
+
+    if (!token) {
+        console.log('Token não existe.');
+        return res.status(401).json({ msg: "Acesso negado." });
     }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET);
+        req.userId = decoded.id; // Anexa o ID do usuário ao objeto req
+        console.log(`Usuário autenticado: ${req.userId}`);
+        next();
+    } catch (error) {
+        console.log('Token inválido ou expirado');
+        return res.status(403).json({ msg: "Token inválido ou expirado." });
+    }
+
+    console.log('-----------------Autenticando--------------------');
 }
 
-export default auth_jwt
+export default auth_jwt;

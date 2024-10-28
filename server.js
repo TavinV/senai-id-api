@@ -3,6 +3,7 @@ import path from 'path'
 
 import admSenaiID from './routes/admSenaiID.js'
 import login from './routes/login.js'
+import carteirinha from './routes/carteirinha.js'
 import auth_jwt from './middleware/auth_jwt.js'
 
 import cors from 'cors'
@@ -14,24 +15,28 @@ import dotenv from 'dotenv'
 const port = 3000
 
 const app = express()
-
 // Static
-dotenv.config()
-app.use(express.static(path.join(__dirname, 'static')))
+app.use('/static', express.static(path.join(__dirname, './static')));
 app.use(cookieParser())
-app.use(cors());
+
+const allowedOrigins = ['http://127.0.0.1:5501']; // Origens permitidas
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true // Permite envio de cookies e outras credenciais
+}));
+
+dotenv.config()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Rotas
 app.use('/admsenaiid', admSenaiID)
 app.use('/login', login)
+app.use('/carteirinha', carteirinha)
 
 app.get('/paineladm/:id', (req, res) => {
     console.log('adm')
-})
-app.get('/carteirinha/:id', (req, res) => {
-    console.log('aluno')
 })
 
 

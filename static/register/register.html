@@ -8,6 +8,7 @@
     <!-- Stylesheets  -->
     <link rel="stylesheet" href="register.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="shortcut icon" href="../../img/senai_logo_quadrada.png" type="image/x-icon">
 </head>
 
 <body>
@@ -31,7 +32,7 @@
                 </div>
                 <div class="profile-div">
                     <p class="profile-text"></p>
-                    <img class="profile-img">
+                    <img class="profile-img" src="../../img/senai_logo_quadrada.png">
                 </div>
             </div>
 
@@ -51,13 +52,13 @@
                 <h2>
                 Registrar aluno
             </h2>
-            <form>
+            <form id="cadastroForm">
                 <div class="icon-input">
                     <input id="nome" autocomplete="off"required type="text">
                     <div class="floating-label">Nome</div>
                 </div>
                 <div class="icon-input">
-                    <input id="rg" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" required type="number">
+                    <input id="rg" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==9) return false;" required type="number">
                     <div class="floating-label">Rg</div>
                 </div>
                 <div class="icon-input">
@@ -72,16 +73,16 @@
                     <input id="matricula"pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==8) return false;" autocomplete="off"required type="number">
                     <div class="floating-label">Matricula</div>
                 </div>
+                <span>
+                    <button>
+                        <input id="foto-aluno" required type="file">
+                        <i class='bx bx-camera' ></i>
+                    </button>
+                    <button type="submit">
+                        <i class='bx bx-check'></i>
+                    </button>
+                </span>
             </form>
-            <span>
-                <button>
-                    <input id="foto-aluno" type="file">
-                    <i class='bx bx-camera' ></i>
-                </button>
-                <button>
-                    <i class='bx bx-check'></i>
-                </button>
-            </span>
         </div>
         <div class="carteirinha-preview">
             <div class="top-inf">
@@ -128,6 +129,7 @@
     </script>   
     <script src="previsualizacao-carteirinha.js"></script> 
     <!-- <script src="load_info.js"></script>  -->
+    <script src="registrar_aluno.js"></script> 
 </body>
 
 </html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senai ID</title>
+    <!-- Stylesheets  -->
+    <link rel="stylesheet" href="../access/carteirinha.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <header>
+        <div class="header-red-container">
+            <a class="header-link" href="">Suporte</a>
+        </div>
+            <div class="header-white-container">
+                <button class="return-button"><i class='bx bx-left-arrow-alt'></i></button>
+                <a href=""><img class="senai-logo" src="../../img/SENAI_logo.png"></a>
+            </div>
+    </header>
+
+    <main>
+        <div class="carteirinha">
+            <div class="top-inf">
+                <img class="senai-logo"src="../../img/SENAI_logo.png">
+                <h3>Escola Nami Jafet</h3>
+                <img id="carteirinha-pfp" class="pfp" src="../../img/placeholder.jpg">
+                <h3 id="nome">Lucas do Espirito Santo Gomes</h3>
+            </div>
+            <div class="bottom-inf">
+                <div class="info-collumn">
+                    <div class="info-group">
+                        <h5>Rg</h5>
+                        <h4 id="rg">478234933-40</h4>
+                    </div>
+                    <div class="info-group">
+                        <h5>Nascido em</h5>
+                        <h4 id="data_nascimento">09/06/2007</h4>
+                    </div>
+                </div>
+                <div class="info-collumn">
+                    <div class="info-group">
+                        <h5>Matrícula</h5>
+                        <h4 id="matricula">2022</h4>
+                    </div>
+                    <div class="info-group">
+                        <img src="../../img/selo.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <h2 id="curso" class="curso">Desenvolvimento de Sistemas</h2>
+        </div>
+    </div>
+<!---------------------------------Button to open the pop-up--------------------------------->
+        <div class="acess">
+            <button class="acess-id" type="submit" onclick="openPopup()">Acessar</button>
+            
+            <div class="popup" id="popup">
+                <div class="close-acess" onclick="closePopup()">
+                    <i class='bx bx-x'></i>
+                </div>
+
+                <img src="/img/QrCode.png">
+            </div>
+        </div>
+    </main>
+    
+    
+
+
+    <script>
+        // Função para abrir/fechar o menu no mobile
+        function toggleMenu() {
+            var menu = document.getElementById("mobileMenu");
+            menu.classList.toggle("active");
+        }
+
+        // Funções para a abertura do acesso em forma de Popup
+        let popup = document.getElementById('popup');
+
+        function openPopup() {
+            popup.classList.add("open-popup");
+        }
+        function closePopup() {
+            popup.classList.remove("open-popup");
+        }
+        
+    </script>   
+    <script src="load_info.js"></script> 
+</body>
+
+</html>

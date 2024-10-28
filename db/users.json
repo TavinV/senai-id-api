@@ -14,7 +14,7 @@
     "foto_perfil": "24194131_pfp.png",
     "login": "24194131",
     "senha": "senai117@58",
-    "adm": true,
+    "adm": false,
     "curso": "Técnico em Desenvolvimento de Sistemas",
     "matricula": "24194131",
     "data_nascimento": "2007-12-18"

@@ -34,6 +34,7 @@ function ler_dbJSON(res) {
 }
 
 router.get('/', (req, res) => {
+    console.log('rota')
     const { login, senha } = req.query
     const users = ler_dbJSON(res)
     const conta = users.filter(user => user.senha === senha && user.login === login)
@@ -41,16 +42,17 @@ router.get('/', (req, res) => {
     if (conta.length > 0) {
 
         const secret = process.env.SECRET
-        const token = jwt.sign(req.query, secret, { expiresIn: "7d" })
+        const token = jwt.sign({ id: conta[0].id }, secret, { expiresIn: "7d" });
+
         res.cookie("token", token, {
-            httpOnly: true
+            httpOnly: true,
+            sameSite: 'None' // Necessário para cross-origin
         })
 
         if (conta[0].adm === true) {
-            return res.status(200).json({ url: `/pages/register/register.html?id=${conta[0].id}` }); // Redireciona para a página de administrador
+            return res.status(200).json({ url: `pages/register/register.html` });
         } else {
-            return res.status(200).json({ url: `/pages/access/carteirinha.html?id=${conta[0].id}` }); // Redireciona para a página de administrador
-
+            return res.status(200).json({ url: `pages/access/carteirinha.html?id=${conta[0].id}` });
         }
 
     } else {
