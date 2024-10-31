@@ -17,7 +17,7 @@ const port = 3000
 const app = express()
 // Static
 app.use('/static', express.static(path.join(__dirname, './static')));
-app.use(cookieParser())
+app.use(cookieParser());
 
 const allowedOrigins = ['http://127.0.0.1:5501']; // Origens permitidas
 
@@ -38,6 +38,11 @@ app.use('/carteirinha', carteirinha)
 app.get('/paineladm/:id', (req, res) => {
     console.log('adm')
 })
+
+app.get('/test-cookie', (req, res) => {
+    console.log('Cookies:', req.cookies);
+    res.json({ cookies: req.cookies });
+});
 
 
 app.listen(port, () => console.log(`Servidor ativo na porta ${port}`))

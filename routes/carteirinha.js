@@ -16,25 +16,26 @@ const db_file_path = path.join(__dirname, '../db/users.json');
 const router = express.Router()
 
 
-function ler_dbJSON(res) {
-    let users = []
+function ler_dbJSON() {
+    let users = [];
     try {
         if (fs.existsSync(db_file_path)) {
-            const file_data = fs.readFileSync(db_file_path, 'utf-8')
-            users = JSON.parse(file_data)
+            const file_data = fs.readFileSync(db_file_path, 'utf-8');
+            users = JSON.parse(file_data);
         } else {
-            throw ('Arquivo JSON não encontrado')
+            throw new Error('Arquivo JSON não encontrado');
         }
-    }
-    catch (err) {
-        return res.status(500).json({ msg: "Ocorreu um erro ao carregar o banco de dados", erro: err })
+    } catch (err) {
+        throw err; // Lança o erro para que a rota possa lidar com ele
     }
 
-    return users
+    return users;
 }
 
+
 router.get('/users/:id', (req, res) => {
-    const users = ler_dbJSON(res);
+    const users = ler_dbJSON();
+    console.log(req.cookies)
     const id = parseInt(req.params.id)
     const user = users.find(u => u.id === id);
 
@@ -61,8 +62,8 @@ router.get('/users/:id', (req, res) => {
 
     // Envia a imagem como resposta
 
-    res.status(200).json({ user });
-    res.sendFile(profileImagePath);
+    return res.status(200).json({ user });
+    return res.sendFile(profileImagePath);
 })
 
 export default router;

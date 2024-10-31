@@ -31,21 +31,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-function ler_dbJSON(res) {
-    let users = []
+function ler_dbJSON() {
+    let users = [];
     try {
         if (fs.existsSync(db_file_path)) {
-            const file_data = fs.readFileSync(db_file_path, 'utf-8')
-            users = JSON.parse(file_data)
+            const file_data = fs.readFileSync(db_file_path, 'utf-8');
+            users = JSON.parse(file_data);
         } else {
-            throw ('Arquivo JSON não encontrado')
+            throw new Error('Arquivo JSON não encontrado');
         }
-    }
-    catch (err) {
-        return res.status(500).json({ msg: "Ocorreu um erro ao carregar o banco de dados", erro: err })
+    } catch (err) {
+        throw err; // Lança o erro para que a rota possa lidar com ele
     }
 
-    return users
+    return users;
 }
 
 router.post('/registrar', upload.single('foto_perfil'), (req, res) => {
@@ -64,7 +63,7 @@ router.post('/registrar', upload.single('foto_perfil'), (req, res) => {
         return res.status(400).json({ error: "Campo obrigatório ausente: foto_perfil" });
     }
 
-    let users = ler_dbJSON(res)
+    let users = ler_dbJSON()
 
     const newUser = {
         id: users.length + 1,
@@ -90,7 +89,7 @@ router.post('/registrar', upload.single('foto_perfil'), (req, res) => {
 
 // Retorna usuários administradores
 router.get('/', (req, res) => {
-    let users = ler_dbJSON(res)
+    let users = ler_dbJSON()
     let adm = users.filter(user => user.adm === true)
 
     res.status(200).json(adm)
@@ -99,7 +98,7 @@ router.get('/', (req, res) => {
 router.get('/users/:id', (req, res) => {
     const id = parseInt(req.params.id)
 
-    let users = ler_dbJSON(res)
+    let users = ler_dbJSON()
     let usuario_procurado = users.filter(user => user.id === id)
 
     if (!usuario_procurado) {

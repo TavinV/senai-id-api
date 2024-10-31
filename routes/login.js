@@ -16,49 +16,51 @@ const db_file_path = path.join(__dirname, '../db/users.json');
 
 const router = express.Router()
 
-function ler_dbJSON(res) {
-    let users = []
+function ler_dbJSON() {
+    let users = [];
     try {
         if (fs.existsSync(db_file_path)) {
-            const file_data = fs.readFileSync(db_file_path, 'utf-8')
-            users = JSON.parse(file_data)
+            const file_data = fs.readFileSync(db_file_path, 'utf-8');
+            users = JSON.parse(file_data);
         } else {
-            throw ('Arquivo JSON não encontrado')
+            throw new Error('Arquivo JSON não encontrado');
         }
-    }
-    catch (err) {
-        return res.status(500).json({ msg: "Ocorreu um erro ao carregar o banco de dados", erro: err })
+    } catch (err) {
+        throw err; // Lança o erro para que a rota possa lidar com ele
     }
 
-    return users
+    return users;
 }
 
 router.get('/', (req, res) => {
-    console.log('rota')
-    const { login, senha } = req.query
-    const users = ler_dbJSON(res)
-    const conta = users.filter(user => user.senha === senha && user.login === login)
+    console.log('rota');
+    const { login, senha } = req.query;
 
-    if (conta.length > 0) {
+    try {
+        const users = ler_dbJSON();
+        const conta = users.filter(user => user.senha === senha && user.login === login);
 
-        const secret = process.env.SECRET
-        const token = jwt.sign({ id: conta[0].id }, secret, { expiresIn: "7d" });
+        if (conta.length > 0) {
+            const contaVerificada = conta[0]
+            const secret = process.env.SECRET;
+            const token = jwt.sign({ id: contaVerificada.id }, secret, { expiresIn: "7d" }); // Convertendo 7 dias em milisegundos
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: 'None' // Necessário para cross-origin
-        })
+            console.log(token)
+            res.cookie("token", token, {
+                httpOnly: true,
+                sameSite: 'Lax',
+                secure: false
+            });
 
-        if (conta[0].adm === true) {
-            return res.status(200).json({ url: `pages/register/register.html` });
+            const responseUrl = contaVerificada.adm === true ? "pages/register/register.html" : `pages/access/carteirinha.html?id=${contaVerificada.id}`;
+            return res.status(200).json({ url: responseUrl });
+
         } else {
-            return res.status(200).json({ url: `pages/access/carteirinha.html?id=${conta[0].id}` });
+            return res.status(401).json({ msg: "Login ou senha incorretos." });
         }
-
-    } else {
-        res.status(401).json({ msg: "Login ou senha incorretos." })
+    } catch (err) {
+        return res.status(500).json({ msg: "Ocorreu um erro ao carregar o banco de dados", erro: err.message });
     }
-
-})
+});
 
 export default router;
