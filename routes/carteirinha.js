@@ -34,19 +34,34 @@ function ler_dbJSON() {
 
 
 router.get('/users/:id', (req, res) => {
-    const users = ler_dbJSON();
-    console.log(req.cookies)
+    console.log("\n\n\n\n----------------------/CARTEIRINHA/USERS/:ID/---------------------------------")
+    console.log("Cookies: ", req.cookies)
+
+    const users = ler_dbJSON()
     const id = parseInt(req.params.id)
     const user = users.find(u => u.id === id);
-
+    
     if (!user) {
         return res.status(404).json({ msg: "Usuário não encontrado." });
     }
+    
+    
+    // Envia a imagem como resposta
+    
+    return res.status(200).json({ user });
+    console.log("-----------------------/CARTEIRINHA/USERS/:ID/---------------------------------")
+})
 
+router.get('/userfotoperfil/:id', (req, res) => {
+    console.log('\n\n\n-------------------------------/CARTEIRINHA/USERS/PFP/:ID/----------------------------------------\n\n\n')
+    const users = ler_dbJSON()
+    const id = parseInt(req.params.id)
+    const user = users.find(u => u.id === id);
+    
     const basePath = path.join(__dirname, '../db/fotos_perfil');
     const possibleExtensions = ['jpg', 'png', 'jpeg'];
     let profileImagePath;
-
+    
     // Verifica cada extensão
     for (let ext of possibleExtensions) {
         const filePath = path.join(basePath, `${user.matricula}_pfp.${ext}`);
@@ -55,15 +70,12 @@ router.get('/users/:id', (req, res) => {
             break;
         }
     }
-
+    
     if (!profileImagePath) {
         return res.status(404).json({ msg: "Imagem de perfil não encontrada." });
     }
-
-    // Envia a imagem como resposta
-
-    return res.status(200).json({ user });
     return res.sendFile(profileImagePath);
+    console.log('\n\n\n-------------------------------/CARTEIRINHA/USERS/PFP/:ID/----------------------------------------\n\n\n')
 })
 
 export default router;

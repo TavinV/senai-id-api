@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import fs from 'fs'
+import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import json from 'body-parser';
 import jwt from 'jsonwebtoken';
@@ -33,28 +34,30 @@ function ler_dbJSON() {
 }
 
 router.get('/', (req, res) => {
-    console.log('rota');
+    console.log('\n\n\n-----------------------/LOGIN/--------------------------');
     const { login, senha } = req.query;
-
+    
     try {
         const users = ler_dbJSON();
         const conta = users.filter(user => user.senha === senha && user.login === login);
-
+        
         if (conta.length > 0) {
             const contaVerificada = conta[0]
-            const secret = process.env.SECRET;
-            const token = jwt.sign({ id: contaVerificada.id }, secret, { expiresIn: "7d" }); // Convertendo 7 dias em milisegundos
-
-            console.log(token)
+            // const secret = process.env.SECRET;
+            const secret = "projetosenaiidsquadrado2025"
+            const token = jwt.sign({ id: contaVerificada.id }, secret, { expiresIn: "7d" });
+            
+            console.log("Token gerado: ", token)
             res.cookie("token", token, {
                 httpOnly: true,
-                sameSite: 'Lax',
+                sameSite: 'none',
                 secure: false
             });
-
+            
             const responseUrl = contaVerificada.adm === true ? "pages/register/register.html" : `pages/access/carteirinha.html?id=${contaVerificada.id}`;
             return res.status(200).json({ url: responseUrl });
-
+            
+            console.log('-----------------------/LOGIN/--------------------------\n\n\n');
         } else {
             return res.status(401).json({ msg: "Login ou senha incorretos." });
         }
@@ -62,5 +65,20 @@ router.get('/', (req, res) => {
         return res.status(500).json({ msg: "Ocorreu um erro ao carregar o banco de dados", erro: err.message });
     }
 });
+
+router.get('/testecookie', (req,res) => {
+    console.log("\n\n\n\n**************************************\n\n\n\n")
+    const secret = "projetosenaiidsquadrado2025"
+    let token = req.headers.cookie
+    console.log(token)
+    token = token.split('=')[1]
+    console.log("\n\n\n\n**************************************\n\n\n\n")
+
+    // const decoded = jwt.verify(token, secret);
+    // req.userId = decoded.id; // Anexa o ID do usuário ao objeto req
+    // console.log(`Usuário autenticado: ${req.userId}`);
+
+    return res.status(200).json({"Msg": token})
+})
 
 export default router;

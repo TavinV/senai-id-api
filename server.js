@@ -19,7 +19,7 @@ const app = express()
 app.use('/static', express.static(path.join(__dirname, './static')));
 app.use(cookieParser());
 
-const allowedOrigins = ['http://127.0.0.1:5501']; // Origens permitidas
+const allowedOrigins = ['http://127.0.0.1:5501', 'http://127.0.0.1:5500']; // Origens permitidas
 
 app.use(cors({
     origin: allowedOrigins,
@@ -34,15 +34,5 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/admsenaiid', admSenaiID)
 app.use('/login', login)
 app.use('/carteirinha', carteirinha)
-
-app.get('/paineladm/:id', (req, res) => {
-    console.log('adm')
-})
-
-app.get('/test-cookie', (req, res) => {
-    console.log('Cookies:', req.cookies);
-    res.json({ cookies: req.cookies });
-});
-
 
 app.listen(port, () => console.log(`Servidor ativo na porta ${port}`))
