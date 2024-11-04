@@ -35,11 +35,12 @@ function ler_dbJSON() {
 }
 
 router.post('/', (req, res) => {
-    console.log('\n\n\n-----------------------/LOGIN/--------------------------');
     const { login, senha } = req.body;
-
     try {
-        const users = ler_dbJSON();
+        let users = ler_dbJSON();
+        console.log(login)
+        console.log(senha)
+        console.log(users.filter(user => user.login == login))
         const conta = users.filter(user => user.senha === senha && user.login === login);
 
         if (conta.length > 0) {
@@ -49,7 +50,6 @@ router.post('/', (req, res) => {
 
             const responseUrl = contaVerificada.adm === true ? "pages/register/register.html" : `pages/access/carteirinha.html`;
             console.log({ url: responseUrl, token: token })
-            console.log('-----------------------/LOGIN/--------------------------\n\n\n');
             return res.status(200).json({ url: responseUrl, token: token });
 
         } else {

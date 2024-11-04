@@ -32,10 +32,16 @@ function ler_dbJSON() {
 
 
 router.get('/users/', (req, res) => {
-    console.log("\n\n\n\n----------------------/CARTEIRINHA/USERS/:ID/---------------------------------")
-    const authHeader = req.headers.authorization;
-    const token = authHeader.split(' ')[1]
-    const secret = process.env.SECRET;
+
+    let authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return response.status(400).json({ msg: "Token não fornecido." });
+    }
+
+    let token = authHeader.split(' ')[1]
+    let secret = process.env.SECRET;
+
     let id = null
 
     if (!token) {
@@ -49,24 +55,21 @@ router.get('/users/', (req, res) => {
             return res.status(403).json({ msg: "Token inválido" })
         }
         id = decoded.id
+        console.log(id)
+        const users = ler_dbJSON()
+        const user = users.find(u => u.id === id);
+
+        if (!user) {
+            return res.status(404).json({ msg: "Usuário não encontrado." });
+        }
+
+
+        return res.status(200).json({ user });
     })
 
-
-    console.log(id)
-    const users = ler_dbJSON()
-    const user = users.find(u => u.id === id);
-
-    if (!user) {
-        return res.status(404).json({ msg: "" });
-    }
-
-
-    console.log("-----------------------/CARTEIRINHA/USERS/:ID/---------------------------------")
-    return res.status(200).json({ user });
 })
 
 router.get('/userfotoperfil/', (req, res) => {
-    console.log('\n\n\n-------------------------------/CARTEIRINHA/USERS/PFP/:ID/----------------------------------------\n\n\n')
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1]
     const secret = process.env.SECRET;
@@ -108,7 +111,6 @@ router.get('/userfotoperfil/', (req, res) => {
     if (!profileImagePath) {
         return res.status(404).json({ msg: "Imagem de perfil não encontrada." });
     }
-    console.log('\n\n\n-------------------------------/CARTEIRINHA/USERS/PFP/:ID/----------------------------------------\n\n\n')
     return res.sendFile(profileImagePath);
 })
 
