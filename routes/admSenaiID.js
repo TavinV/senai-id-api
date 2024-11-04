@@ -1,10 +1,11 @@
-import express from 'express'
+import express, { response } from 'express'
 import path from 'path'
 import fs from 'fs'
 // import bodyParser from 'body-parser';
+// import { json } from 'body-parser';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-// import { json } from 'body-parser';
+import jwt from 'jsonwebtoken'
 
 // Para utilizar o __filename e __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -87,12 +88,46 @@ router.post('/registrar', upload.single('foto_perfil'), (req, res) => {
 
 });
 
-// Retorna usuários administradores
+// Retorna as informações do ADM com base no token
 router.get('/', (req, res) => {
     let users = ler_dbJSON()
-    let adm = users.filter(user => user.adm === true)
+    
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1]
+    // const secret = process.env.SECRET;
+    const secret = "projetosenaiidtccsquadrado2025";
+    let id = null
+    const admnistradores = users.filter(u => u.adm == true)
+    console.log(admnistradores)
 
-    res.status(200).json(adm)
+    if (!token) {
+        return response.status(400).json({ msg: "Token não fornecido." });
+    }
+
+    // Verificando o token
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ msg: "Token inválido" })
+        }
+        id = decoded.id
+
+    })
+
+
+    let contaAdmAtual = null
+
+    if(id == null){
+        return res.status(403).json({msg: "Token inválido"})
+    }
+
+    contaAdmAtual = admnistradores.find(adm => adm.id == id)
+
+    if (contaAdmAtual){
+        return res.status(200).json({contaAdmAtual})
+    } else {
+        return res.status(403).json({msg: "Usuário não é administrador"})
+    }
+
 })
 
 router.get('/users/:id', (req, res) => {

@@ -65,7 +65,8 @@ router.get('/users/', (req, res) => {
 router.get('/userfotoperfil/', (req, res) => {
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1]
-    const secret = process.env.SECRET;
+    // const secret = process.env.SECRET;
+    const secret = "projetosenaiidtccsquadrado2025";
     let id = null
 
     if (!token) {
