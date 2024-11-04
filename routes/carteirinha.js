@@ -1,9 +1,7 @@
-import express from 'express'
+import express, { response } from 'express'
 import path from 'path'
 import fs from 'fs'
-// import bodyParser from 'body-parser';
-// import { json } from 'body-parser';
-import auth_jwt from '../middleware/auth_jwt.js'
+import jwt from "jsonwebtoken";
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 
@@ -33,14 +31,29 @@ function ler_dbJSON() {
 }
 
 
-router.get('/users/:id', (req, res) => {
+router.get('/users/', (req, res) => {
     console.log("\n\n\n\n----------------------/CARTEIRINHA/USERS/:ID/---------------------------------")
-    console.log("Cookies: ", req.cookies)
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1]
+    const secret = process.env.SECRET;
+    let id = null
+
+    if (!token) {
+        return response.status(400).json({ msg: "Token não fornecido." });
+    }
+
+    // Verificando o token
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            console.log('erro')
+            return res.status(403).json({ msg: "Token inválido" })
+        }
+        id = decoded.id
+    })
 
 
-
+    console.log(id)
     const users = ler_dbJSON()
-    const id = parseInt(req.params.id)
     const user = users.find(u => u.id === id);
 
     if (!user) {
@@ -52,10 +65,27 @@ router.get('/users/:id', (req, res) => {
     return res.status(200).json({ user });
 })
 
-router.get('/userfotoperfil/:id', (req, res) => {
+router.get('/userfotoperfil/', (req, res) => {
     console.log('\n\n\n-------------------------------/CARTEIRINHA/USERS/PFP/:ID/----------------------------------------\n\n\n')
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1]
+    const secret = process.env.SECRET;
+    let id = null
+
+    if (!token) {
+        return response.status(400).json({ msg: "Token não fornecido." });
+    }
+
+    // Verificando o token
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            console.log('erro')
+            return res.status(403).json({ msg: "Token inválido" })
+        }
+        id = decoded.id
+    })
+
     const users = ler_dbJSON()
-    const id = parseInt(req.params.id)
     const user = users.find(u => u.id === id);
 
     if (!user) {

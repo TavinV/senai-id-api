@@ -47,16 +47,10 @@ router.post('/', (req, res) => {
             const secret = process.env.SECRET;
             const token = jwt.sign({ id: contaVerificada.id }, secret, { expiresIn: "7d" });
 
-            console.log("Token: ", token)
-            res.cookie("token", token, {
-                httpOnly: true,
-                sameSite: 'lax',
-                secure: true
-            });
-
-            const responseUrl = contaVerificada.adm === true ? "pages/register/register.html" : `pages/access/carteirinha.html?id=${contaVerificada.id}`;
+            const responseUrl = contaVerificada.adm === true ? "pages/register/register.html" : `pages/access/carteirinha.html`;
+            console.log({ url: responseUrl, token: token })
             console.log('-----------------------/LOGIN/--------------------------\n\n\n');
-            return res.status(200).json({ url: responseUrl });
+            return res.status(200).json({ url: responseUrl, token: token });
 
         } else {
             console.log('Login ou senha incorretos')
@@ -66,20 +60,5 @@ router.post('/', (req, res) => {
         return res.status(500).json({ msg: "Ocorreu um erro ao carregar o banco de dados", erro: err.message });
     }
 });
-
-router.get('/testecookie', (req, res) => {
-    console.log("\n\n\n\n**************************************\n\n\n\n")
-    const secret = "projetosenaiidsquadrado2025"
-    let token = req.headers.cookie
-    console.log(token)
-    token = token.split('=')[1]
-    console.log("\n\n\n\n**************************************\n\n\n\n")
-
-    // const decoded = jwt.verify(token, secret);
-    // req.userId = decoded.id; // Anexa o ID do usuário ao objeto req
-    // console.log(`Usuário autenticado: ${req.userId}`);
-
-    return res.status(200).json({ "Msg": token })
-})
 
 export default router;
