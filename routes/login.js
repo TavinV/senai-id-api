@@ -35,7 +35,6 @@ function ler_dbJSON() {
 }
 
 router.post('/', (req, res) => {
-    console.log('\n\n\n-----------------------/LOGIN/--------------------------');
     const { login, senha } = req.body;
 
     try {
@@ -44,12 +43,11 @@ router.post('/', (req, res) => {
 
         if (conta.length > 0) {
             const contaVerificada = conta[0]
-            const secret = process.env.SECRET;
+            // const secret = process.env.SECRET;
+            const secret = "projetosenaiidtccsquadrado2025";
             const token = jwt.sign({ id: contaVerificada.id }, secret, { expiresIn: "7d" });
 
             const responseUrl = contaVerificada.adm === true ? "pages/register/register.html" : `pages/access/carteirinha.html`;
-            console.log({ url: responseUrl, token: token })
-            console.log('-----------------------/LOGIN/--------------------------\n\n\n');
             return res.status(200).json({ url: responseUrl, token: token });
 
         } else {
