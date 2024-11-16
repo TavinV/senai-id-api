@@ -1,25 +1,30 @@
 import jwt from "jsonwebtoken";
 
-const auth_jwt = (req, res, next) => {
-    const token = req.cookies.token;
-    console.log('-----------------Autenticando--------------------');
+// Middleware para verificar a validade de um Token JWT, e pode verificar permissões.
+const validarToken = (verificarCargo = false) => (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
+    if (!authHeader) {
+        return res.status(400).json({ msg: "Token não fornecido." });
+    }
+
+    const token = authHeader.split(' ')[1];
     if (!token) {
-        console.log('Token não existe.');
-        return res.status(401).json({ msg: "Acesso negado." });
+        return res.status(400).json({ msg: "Token não fornecido." });
     }
 
-    try {
-        const decoded = jwt.verify(token, process.env.SECRET);
-        req.userId = decoded.id; // Anexa o ID do usuário ao objeto req
-        console.log(`Usuário autenticado: ${req.userId}`);
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ msg: "Token inválido." });
+        }
+
+        if (verificarCargo && decoded.cargo !== 'secretaria') {
+            return res.status(403).json({ msg: "Você não tem permissão para realizar essa ação." });
+        }
+
+        req.decoded = decoded; // Passa o token decodificado para os próximos middlewares
         next();
-    } catch (error) {
-        console.log('Token inválido ou expirado');
-        return res.status(403).json({ msg: "Token inválido ou expirado." });
-    }
+    });
+};
 
-    console.log('-----------------Autenticando--------------------');
-}
-
-export default auth_jwt;
+export default validarToken;

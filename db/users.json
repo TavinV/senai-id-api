@@ -2,7 +2,7 @@
   {
     "id": 0,
     "nome": "Secretaria Senai Nami Jafet",
-    "adm": true,
+    "cargo": "secretaria",
     "login": "secretaria117",
     "senha": "senai117@adm",
     "foto_perfil": "senai_logo_quadrada"
@@ -14,7 +14,7 @@
     "foto_perfil": "24194131_pfp.png",
     "login": "24194131",
     "senha": "senai117@58",
-    "adm": false,
+    "cargo": "aluno",
     "curso": "Técnico em Desenvolvimento de Sistemas",
     "matricula": "24194131",
     "data_nascimento": "2007-12-18"
@@ -26,9 +26,33 @@
     "foto_perfil": "38143132_pfp.png",
     "login": "38143132",
     "senha": "senai117@43",
-    "adm": "false",
+    "cargo": "aluno",
     "curso": "Técnico em Desenvolvimento de Sistemas",
     "matricula": "38143132",
     "data_nascimento": "2007-08-27"
+  },
+  {
+    "id": 4,
+    "nome": "Bruno Messias Aguiar",
+    "cpf": "435432213",
+    "foto_perfil": "38143132_pfp.png",
+    "login": "brunomessiasaguiar",
+    "senha": "naotemsenha",
+    "cargo": "funcionario",
+    "descricao": "Professor",
+    "nif": "1234567",
+    "pis": "12345678900"
+  },
+  {
+    "id": 5,
+    "nome": "Lucas do Espírito Santo Gomes",
+    "rg": "328137136",
+    "foto_perfil": "98120937_pfp.jpg",
+    "login": "98120937",
+    "senha": "senai117@32",
+    "cargo": "aluno",
+    "curso": "Técnico em Desenvolvimento de Sistemas",
+    "matricula": "98120937",
+    "data_nascimento": "2008-01-16"
   }
 ]
