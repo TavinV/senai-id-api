@@ -27,6 +27,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Rotas
+app.use('/inicio', inicio)
 app.use('/admsenaiid', admSenaiID)
 app.use('/login', login)
 app.use('/carteirinha', carteirinha)
