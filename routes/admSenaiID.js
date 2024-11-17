@@ -38,7 +38,6 @@ router.post(
         const requiredFields = { nome, rg, login, senha, curso, data_nascimento, matricula };
         const missingFields = Object.keys(requiredFields).filter(field => !requiredFields[field]);
 
-        console.log("Hello adm")
         if (missingFields.length > 0) {
             return res.status(400).json({
                 error: `Campos obrigatórios ausentes: ${missingFields.join(", ")}`
@@ -69,7 +68,7 @@ router.post(
     }
 );
 
-// Busca as informações de qualquer usuário com base no token que é enviado.
+// Busca as informações do usuário que está loggado na conta com base no token que é enviado.
 router.get('/', validarToken(true), (req, res) => {
     const decodedInfo = req.decoded;
 

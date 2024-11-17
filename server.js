@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 import admSenaiID from './routes/admSenaiID.js'
 import login from './routes/login.js'
 import carteirinha from './routes/carteirinha.js'
+import rerouter from './routes/rerouter.js'
+
 import * as dbFetch from './modules/database_manager.js'
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,15 +29,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Rotas
-app.use('/inicio', inicio)
+app.use('/rerouter', rerouter)
 app.use('/admsenaiid', admSenaiID)
 app.use('/login', login)
 app.use('/carteirinha', carteirinha)
-
-app.get('/', (req, res) => {
-    let teste = dbFetch.ler_dbJSON()
-    console.log(teste)
-    res.status(200).json({ msg: teste })
-})
 
 app.listen(port, () => console.log(`Servidor ativo na porta ${port}`))

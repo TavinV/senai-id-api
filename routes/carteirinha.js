@@ -30,7 +30,6 @@ function buscarFoto(nomeArquivo) {
 
     // Verificando se o arquivo nomeArquivo existe
     if (fs.existsSync(filePath)) {
-        console.log(filePath)
         return filePath;
     }
 }
