@@ -54,5 +54,17 @@
     "curso": "Técnico em Desenvolvimento de Sistemas",
     "matricula": "98120937",
     "data_nascimento": "2008-01-16"
+  },
+  {
+    "id": 6,
+    "nome": "Telma Alves Flauzino de Souza",
+    "rg": "291086312",
+    "foto_perfil": "12903861_pfp.png",
+    "login": "12903861",
+    "senha": "senai117@29",
+    "cargo": "aluno",
+    "curso": "Soldagem",
+    "matricula": "12903861",
+    "data_nascimento": "1981-11-27"
   }
 ]

@@ -4,6 +4,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url';
 import validarToken from '../middleware/auth_jwt.js'
 import * as DbMng from '../modules/database_manager.js'
+import { url } from 'inspector';
 
 // Para utilizar o __filename e __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -34,7 +35,7 @@ function buscarFoto(nomeArquivo) {
     }
 }
 
-router.get('/userfotoperfil/', validarToken(false), (req, res) => {
+router.get('/users/fotoperfil/', validarToken(false), (req, res) => {
     let id = req.decoded.id
     const user = DbMng.procurarUsuarioKey({ id: id })
 
@@ -50,4 +51,24 @@ router.get('/userfotoperfil/', validarToken(false), (req, res) => {
     return res.sendFile(profileImagePath);
 })
 
+router.get('/users/access', validarToken(false), (req, res) => {
+    let id = req.decoded.id
+    const user = DbMng.procurarUsuarioKey({ id: id })
+    let accessKey = ""
+
+    switch (user.cargo) {
+        case "aluno":
+            accessKey = user.matricula.toString().padStart(20, '0');
+            break;
+        case "funcionario":
+            accessKey = user.nif.toString().padStart(20, '0');
+            break;
+
+        default:
+            return res.status(400).msg("Usuário com cargo não identificado")
+            break;
+    }
+
+    return res.status(200).json({ url: `https://api.qrserver.com/v1/create-qr-code/?data=${accessKey}&amp;size=100x100` })
+})
 export default router;
