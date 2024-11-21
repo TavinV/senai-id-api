@@ -14,6 +14,7 @@ API REST Para o projeto de TCC do curso de Desenvolvimento de sistemas da turma 
 | Parâmetro   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
 | `login`      | `string`  | **Obrigatório**. Login do usuário |
+| `senha`      | `string`  | **Obrigatório**. Senha do usuário |
 
 ### Resposta
 #### Caso o login seja efetuado com sucesso, a resposta será a seguinte:
