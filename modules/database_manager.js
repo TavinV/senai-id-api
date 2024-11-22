@@ -3,6 +3,9 @@ import fs from 'fs'
 
 import { fileURLToPath } from 'url';
 import { console } from 'inspector';
+import * as criptografar from '../modules/criptografar.js' // Módulo que cuida da criptografia
+import { log } from 'console';
+
 
 // Para utilizar o __filename e __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -30,33 +33,86 @@ function ler_dbJSON() {
 
 export function procurarContaLoginESenha(login, senha) {
     const users = ler_dbJSON()
+    let user = null
+    // Verificando se o login inputado pertence a alguma conta
+    const usuarioEncontrado = users.filter(u => u.login == login)
 
-    const conta = users.filter(u => u.login == login && u.senha == senha)
-    if (conta.length > 0) {
-        return conta[0]
-    } else {
-        return null
+    if (usuarioEncontrado.length > 0) {
+        // Criptografando a senha inputada e comparando as duas senhas.
+
+        const salt = usuarioEncontrado[0].salt
+        const senhaCriptografada = criptografar.criarHash(senha, salt)
+        user = senhaCriptografada
+
+        if (senhaCriptografada == usuarioEncontrado[0].senha) {
+            user = usuarioEncontrado[0]
+        }
     }
+    return user
 }
 
 export function registrarAluno(nome, rg, login, senha, cargo, curso, matricula, data_nascimento, foto) {
     let users = ler_dbJSON()
-    const newUser = {
-        id: users.length + 1,
-        nome,
-        rg,
-        foto_perfil: foto,
-        login,
-        senha,
-        cargo,
-        curso,
-        matricula,
-        data_nascimento
-    };
 
-    // Adiciona o usuário ao JSON e responde com sucesso
-    users.push(newUser);
-    fs.writeFileSync(db_file_path, JSON.stringify(users, null, 2));
+    if (procurarUsuarioKey({ login: login })) {
+        throw new Error('Já existe um aluno com esse login')
+    } else {
+
+        const id = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        const salt = criptografar.criarSalt()
+        const senhaSegura = criptografar.criarHash(senha, salt)
+
+        const newUser = {
+            id,
+            nome,
+            rg,
+            foto_perfil: foto,
+            login,
+            senha: senhaSegura,
+            salt,
+            cargo,
+            curso,
+            matricula,
+            data_nascimento,
+            default_pass: true
+        };
+
+        // Adiciona o usuário ao JSON e responde com sucesso
+        users.push(newUser);
+        fs.writeFileSync(db_file_path, JSON.stringify(users, null, 2));
+    }
+}
+
+export function registrarProfessor(nome, cpf, login, senha, cargo, descricao, nif, pis, foto) {
+    let users = ler_dbJSON()
+
+    if (procurarUsuarioKey({ login: login })) {
+        throw new Error('Já existe um aluno com esse login')
+    } else {
+
+        const id = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        const salt = criptografar.criarSalt()
+        const senhaSegura = criptografar.criarHash(senha, salt)
+
+        const newUser = {
+            id,
+            nome,
+            cpf,
+            foto_perfil: foto,
+            login,
+            senha: senhaSegura,
+            salt,
+            cargo,
+            descricao,
+            nif,
+            pis,
+            default_pass: true
+        };
+
+        // Adiciona o usuário ao JSON e responde com sucesso
+        users.push(newUser);
+        fs.writeFileSync(db_file_path, JSON.stringify(users, null, 2));
+    }
 }
 
 export function procurarUsuarioKey(criterio) {

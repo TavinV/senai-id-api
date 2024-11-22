@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 const router = express.Router()
 
 // Rota que é executada ao entrar na página de carteirinha, verifica a validade do Token e expulsa o usuário caso não seja um token válido.
-router.get('/users/', validarToken(false), (req, res) => {
+router.get('/me', validarToken(false), (req, res) => {
     const id = req.decoded.id
     const user = DbMng.procurarUsuarioKey({ id: id })
 
@@ -35,7 +35,7 @@ function buscarFoto(nomeArquivo) {
     }
 }
 
-router.get('/users/fotoperfil/', validarToken(false), (req, res) => {
+router.get('/me/fotoperfil', validarToken(false), (req, res) => {
     let id = req.decoded.id
     const user = DbMng.procurarUsuarioKey({ id: id })
 
@@ -51,7 +51,7 @@ router.get('/users/fotoperfil/', validarToken(false), (req, res) => {
     return res.sendFile(profileImagePath);
 })
 
-router.get('/users/access', validarToken(false), (req, res) => {
+router.get('/me/access', validarToken(false), (req, res) => {
     let id = req.decoded.id
     const user = DbMng.procurarUsuarioKey({ id: id })
     let accessKey = ""

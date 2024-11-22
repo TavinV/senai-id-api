@@ -30,10 +30,11 @@ const upload = multer({ storage: storage });
 
 // Registra novos alunos, validando as permissões com JWT e enviando a sua foto na pasta através do multer.
 router.post(
-    '/registrar',
+    '/registrar/aluno',
     validarToken(true), // Primeiro valida o token
     upload.single('foto_perfil'), // Só processa o upload após a validação
     async (req, res) => {
+
         const { nome, rg, login, senha, cargo, curso, data_nascimento, matricula } = req.body;
         const requiredFields = { nome, rg, login, senha, curso, data_nascimento, matricula };
         const missingFields = Object.keys(requiredFields).filter(field => !requiredFields[field]);
@@ -69,7 +70,7 @@ router.post(
 );
 
 // Busca as informações do usuário que está loggado na conta com base no token que é enviado.
-router.get('/', validarToken(true), (req, res) => {
+router.get('/user/me', validarToken(true), (req, res) => {
     const decodedInfo = req.decoded;
 
     if (!decodedInfo) {
