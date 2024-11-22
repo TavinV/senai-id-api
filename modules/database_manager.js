@@ -33,7 +33,7 @@ function ler_dbJSON() {
 
 export function procurarContaLoginESenha(login, senha) {
     const users = ler_dbJSON()
-    let user = null
+    let user
     // Verificando se o login inputado pertence a alguma conta
     const usuarioEncontrado = users.filter(u => u.login == login)
 
@@ -47,6 +47,8 @@ export function procurarContaLoginESenha(login, senha) {
         if (senhaCriptografada == usuarioEncontrado[0].senha) {
             user = usuarioEncontrado[0]
         }
+    } else {
+        user = undefined
     }
     return user
 }

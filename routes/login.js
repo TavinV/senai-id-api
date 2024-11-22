@@ -1,7 +1,6 @@
 import express from 'express'
 import jwt from 'jsonwebtoken';
 import * as dbMng from '../modules/database_manager.js'
-import * as criptografar from '../modules/criptografar.js'
 
 const router = express.Router()
 
