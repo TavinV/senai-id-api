@@ -35,5 +35,33 @@
     "matricula": "09312329",
     "data_nascimento": "2007-05-25",
     "default_pass": true
+  },
+  {
+    "id": "5alym43bj9dm3v2xqvm",
+    "nome": "Lucas do Espírito Santo Gomes",
+    "rg": "912837618",
+    "foto_perfil": "92083968_pfp.png",
+    "login": "lucas_gomes18",
+    "senha": "q/BKVbaYat7x8SsorhBOFoWiq/SBN5aQLXxUxxyeIiQ=",
+    "salt": "6dqwxaj52jt",
+    "cargo": "aluno",
+    "curso": "Técnico em  Desenvolvimento de Sistemas",
+    "matricula": "92083968",
+    "data_nascimento": "2008-01-16",
+    "default_pass": true
+  },
+  {
+    "id": "xth4ev9js4fm3v34qrq",
+    "nome": "Leonardo Porfírio Correa",
+    "rg": "831298371",
+    "foto_perfil": "25893712_pfp.png",
+    "login": "leonardo_correa71",
+    "senha": "x3Zeuz46vKMXV4aP/YP4UWVdEiZpe0iNcqTrxoFBgb0=",
+    "salt": "a3220f6sfyt",
+    "cargo": "aluno",
+    "curso": "Técnico em Desenvolvimento de Sistemas",
+    "matricula": "25893712",
+    "data_nascimento": "2007-06-20",
+    "default_pass": true
   }
 ]

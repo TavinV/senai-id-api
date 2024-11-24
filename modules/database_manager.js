@@ -33,24 +33,22 @@ function ler_dbJSON() {
 
 export function procurarContaLoginESenha(login, senha) {
     const users = ler_dbJSON()
-    let user
+    let user = null
     // Verificando se o login inputado pertence a alguma conta
     const usuarioEncontrado = users.filter(u => u.login == login)
 
+    console.log(usuarioEncontrado)
     if (usuarioEncontrado.length > 0) {
         // Criptografando a senha inputada e comparando as duas senhas.
-
         const salt = usuarioEncontrado[0].salt
         const senhaCriptografada = criptografar.criarHash(senha, salt)
-        user = senhaCriptografada
 
         if (senhaCriptografada == usuarioEncontrado[0].senha) {
-            user = usuarioEncontrado[0]
+            return usuarioEncontrado[0]
         }
     } else {
-        user = undefined
+        return undefined
     }
-    return user
 }
 
 export function registrarAluno(nome, rg, login, senha, cargo, curso, matricula, data_nascimento, foto) {
@@ -104,7 +102,7 @@ export function registrarProfessor(nome, cpf, login, senha, cargo, descricao, ni
             login,
             senha: senhaSegura,
             salt,
-            cargo,
+            cargo: "funcionario",
             descricao,
             nif,
             pis,
