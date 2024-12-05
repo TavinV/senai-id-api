@@ -1,6 +1,5 @@
 import express from 'express'
 import jwt from 'jsonwebtoken';
-import * as dbMng from '../modules/database_manager.js'
 
 const router = express.Router()
 
@@ -19,7 +18,9 @@ router.get('/', (req, res) => {
         return res.status(400).json({ msg: "Token não fornecido." });
     }
 
-    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    const secret = process.env.SECRET || 'produção';
+
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) {
             return res.status(403).json({ msg: "Token inválido." });
         }

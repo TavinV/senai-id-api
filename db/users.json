@@ -35,5 +35,19 @@
     "matricula": "09312329",
     "data_nascimento": "2007-05-25",
     "default_pass": true
+  },
+  {
+    "id": "fypeo7cxs9tm4bmqzq1",
+    "nome": "Igor Teixeira Souza",
+    "rg": "329367129",
+    "login": "igor_souza29",
+    "senha": "RsrOqsTe5x+VdWuJ+XVQP8Lhe79B3N0cOMGMvFOX2rA=",
+    "cargo": "aluno",
+    "curso": "Técnico em Desenvolvimento de Sistemas",
+    "matricula": "13972581",
+    "data_nascimento": "2007-08-07",
+    "foto_perfil": "13972581_pfp.png",
+    "salt": "uanmvcr30c",
+    "default_pass": true
   }
 ]
