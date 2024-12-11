@@ -1,15 +1,19 @@
 import express from 'express'
 import jwt from 'jsonwebtoken';
-import * as dbMng from '../modules/database_manager.js'
+
+import { userManager } from '../modules/user_manager.js';
 
 const router = express.Router()
 
 router.post('/', (req, res) => {
     const { login, senha } = req.body;
+    console.log(login)
+    console.log(senha)
+    
     try {
-        const conta = dbMng.procurarContaLoginESenha(login, senha)
+        const conta = userManager.findUserByLoginAndPassword(login, senha);
         if (conta) {
-            const secret = process.env.SECRET;
+            const secret = process.env.SECRET || 'produção';
 
             // Assinando um token JWT com o cargo e ID do usuário.
             const token = jwt.sign({ id: conta.id, cargo: conta.cargo }, secret, { expiresIn: "7d" });

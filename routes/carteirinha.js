@@ -3,7 +3,7 @@ import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url';
 import validarToken from '../middleware/auth_jwt.js'
-import * as DbMng from '../modules/database_manager.js'
+import { userManager } from '../modules/user_manager.js'
 import { url } from 'inspector';
 
 // Para utilizar o __filename e __dirname
@@ -15,7 +15,7 @@ const router = express.Router()
 // Rota que é executada ao entrar na página de carteirinha, verifica a validade do Token e expulsa o usuário caso não seja um token válido.
 router.get('/me', validarToken(false), (req, res) => {
     const id = req.decoded.id
-    const user = DbMng.procurarUsuarioKey({ id: id })
+    const user = userManager.findUserByKey({id: id})
 
     if (!user) {
         return res.status(404).json({ msg: "Usuário não encontrado." });
@@ -37,13 +37,15 @@ function buscarFoto(nomeArquivo) {
 
 router.get('/me/fotoperfil', validarToken(false), (req, res) => {
     let id = req.decoded.id
-    const user = DbMng.procurarUsuarioKey({ id: id })
+    const user = userManager.findUserByKey({id: id})
 
+    
     if (!user) {
         return res.status(404).json({ msg: "Usuário não encontrado." })
     }
-
+    
     let profileImagePath = buscarFoto(user.foto_perfil)
+    console.log(user.foto_perfil)
 
     if (!profileImagePath) {
         return res.status(404).json({ msg: "Imagem de perfil não encontrada." });
@@ -53,7 +55,8 @@ router.get('/me/fotoperfil', validarToken(false), (req, res) => {
 
 router.get('/me/access', validarToken(false), (req, res) => {
     let id = req.decoded.id
-    const user = DbMng.procurarUsuarioKey({ id: id })
+    const user = userManager.findUserByKey({id: id})
+
     let accessKey = ""
 
     switch (user.cargo) {

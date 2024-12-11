@@ -8,9 +8,7 @@ import secretaria from './routes/secretaria.js'
 import login from './routes/login.js'
 import carteirinha from './routes/carteirinha.js'
 import rerouter from './routes/rerouter.js'
-
-import * as dbFetch from './modules/database_manager.js'
-
+    
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

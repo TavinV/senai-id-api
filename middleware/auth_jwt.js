@@ -12,8 +12,9 @@ const validarToken = (verificarCargo = false) => (req, res, next) => {
     if (!token) {
         return res.status(400).json({ msg: "Token não fornecido." });
     }
+    const secret = process.env.SECRET  || 'produção'
 
-    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) {
             return res.status(403).json({ msg: "Token inválido." });
         }
