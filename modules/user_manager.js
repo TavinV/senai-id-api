@@ -77,18 +77,6 @@ class UserManager {
     this.#saveDatabase(users);
   }
 
-  // Método para registrar um aluno
-  registerStudent(data) {
-    const { nome, rg, login, senha, cargo, curso, matricula, data_nascimento, foto_perfil } = data;
-    this.registerUser({ nome, rg, login, senha, cargo, curso, matricula, data_nascimento, foto_perfil });
-  }
-
-  // Método para registrar um professor
-  registerTeacher(data) {
-    const { nome, cpf, login, senha, cargo, descricao, nif, pis, foto_perfil } = data;
-    this.registerUser({ nome, cpf, login, senha, cargo, descricao, nif, pis, foto_perfil });
-  }
-
   // Método para encontrar um usuário por critério
   findUserByKey(criteria) {
     const users = this.#readDatabase();

@@ -13,27 +13,15 @@
     "nome": "Otávio Vinícius Flauzino de Souza",
     "rg": "581605109",
     "foto_perfil": "24918236_pfp.png",
-    "login": "24918236",
+    "login": "otavio_vinicius09",
     "senha": "wUa1eQULiMku6n8DshE7+Gvsbx+VOppCzmMrd+s7O38=",
     "salt": "ucxsujls3ke",
     "cargo": "aluno",
     "curso": "Técnico em Desenvolvimento de Sistemas",
+    "turma": "I1PB",
     "matricula": "24918236",
     "data_nascimento": "2007-12-18",
-    "default_pass": true
-  },
-  {
-    "id": "rvrh0kj1n5m3s33v75",
-    "nome": "Lucas Berlotti Odashima",
-    "rg": "127693912",
-    "foto_perfil": "09312329_pfp.png",
-    "login": "09312329",
-    "senha": "bW87nPTRQByUd9juDJ/B25Cwd/wCW60ZIFtRqUGVV7E=",
-    "salt": "e3mv0si5fq",
-    "cargo": "aluno",
-    "curso": "Técnico em Eletroeletronica",
-    "matricula": "09312329",
-    "data_nascimento": "2007-05-25",
+    "horario_entrada": "7:30",
     "default_pass": true
   },
   {
@@ -46,8 +34,10 @@
     "salt": "6dqwxaj52jt",
     "cargo": "aluno",
     "curso": "Técnico em  Desenvolvimento de Sistemas",
+    "turma": "I1PB",
     "matricula": "92083968",
     "data_nascimento": "2008-01-16",
+    "horario_entrada": "7:30",
     "default_pass": true
   },
   {
@@ -60,8 +50,10 @@
     "salt": "a3220f6sfyt",
     "cargo": "aluno",
     "curso": "Técnico em Desenvolvimento de Sistemas",
+    "turma": "I1PB",
     "matricula": "25893712",
     "data_nascimento": "2007-06-20",
+    "horario_entrada": "7:30",
     "default_pass": true
   },
   {
@@ -72,10 +64,40 @@
     "senha": "RsrOqsTe5x+VdWuJ+XVQP8Lhe79B3N0cOMGMvFOX2rA=",
     "cargo": "aluno",
     "curso": "Técnico em Desenvolvimento de Sistemas",
+    "turma": "I1PB",
     "matricula": "13972581",
     "data_nascimento": "2007-08-07",
+    "horario_entrada": "7:30",
     "foto_perfil": "13972581_pfp.png",
     "salt": "uanmvcr30c",
+    "default_pass": true
+  },
+  {
+    "id": "toyhoi9xow8m4j9jou1",
+    "nome": "Vinícius Lucas Felix",
+    "rg": "175957903",
+    "login": "vinicius_felix03",
+    "senha": "KDkS5qJgfNRzntHFhqFBjE6padQ8+6A5NuR7hrlHoxM=",
+    "cargo": "aluno",
+    "curso": "Técnico em Desenvolvimento de Sistemas",
+    "turma": "I1PB",
+    "horario_entrada": "00:00",
+    "matricula": "04729473",
+    "data_nascimento": "2007-08-16",
+    "salt": "w5pdi1ag6n",
+    "default_pass": true
+  },
+  {
+    "id": "2j2dtr9x6xmm4rxf2pg",
+    "nome": "Bruno Messias Aguiar",
+    "cpf": "12345678900",
+    "login": "brunomessiasaguiar",
+    "senha": "EJQ6Ll1LVE4q9dodS2DnypYIeyLkkH13AprjMMeB3g4=",
+    "pis": "82310391212",
+    "nif": "1234567",
+    "data_nascimento": "05/08/1980",
+    "foto": "1234567_pfp.png",
+    "salt": "f7asvswdzv5",
     "default_pass": true
   }
 ]
