@@ -4,6 +4,7 @@ import fs from 'fs'
 import { fileURLToPath } from 'url';
 import validarToken from '../middleware/auth_jwt.js'
 import { userManager } from '../modules/user_manager.js'
+import User from '../models/user_model.js';
 import { delayManager } from '../modules/student_delay_manager.js'
 import moment from 'moment';
 
@@ -85,6 +86,24 @@ router.get('/me/access', validarToken(false), async (req, res) => {
 
     return res.status(200).json({ url: gerarQRCODE(user) })
 
+})
+
+router.get("/primeiroacesso", async (req, res) => {
+    const id = req.query.id
+    const user = await User.findOne({ id: id })
+
+    if (user) {
+        return res.status(200).json(
+            {
+                nome: user.nome,
+                login: user.login,
+                senha: user.senha_padrao,
+                rg: user.rg
+
+            })
+    } else {
+        return res.status(404).json({ msg: "Usuário não encontrado." })
+    }
 })
 
 export default router;
