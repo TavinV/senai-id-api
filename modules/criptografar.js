@@ -7,3 +7,15 @@ export function criarHash(conteudo, salt) {
 export function criarSalt() {
     return Math.random().toString(36).substring(2, 18);
 }
+
+export function protegerSenhaUsuario(usuario) {
+    const senha = usuario.senha
+    const salt = criarSalt();
+    const senhaSegura = criarHash(senha, salt)
+
+    usuario.senha = senhaSegura
+    usuario.salt = salt
+    usuario.senha_padrao = senha
+
+    return usuario
+}

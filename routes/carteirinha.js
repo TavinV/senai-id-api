@@ -14,9 +14,9 @@ const __dirname = path.dirname(__filename);
 const router = express.Router()
 
 // Rota que é executada ao entrar na página de carteirinha, verifica a validade do Token e expulsa o usuário caso não seja um token válido.
-router.get('/me', validarToken(false), (req, res) => {
+router.get('/me', validarToken(false), async (req, res) => {
     const id = req.decoded.id
-    const user = userManager.findUserByKey({ id: id })
+    const user = await userManager.findUserByKey({ id: id })
 
     if (!user) {
         return res.status(404).json({ msg: "Usuário não encontrado." });
@@ -28,7 +28,7 @@ router.get('/me', validarToken(false), (req, res) => {
 function buscarFoto(nomeArquivo) {
     // Diretório aonde estão as fotos de perfil
     const basePath = path.join(__dirname, '../db/fotos_perfil');
-    const filePath = path.join(basePath, `${nomeArquivo}`);
+    const filePath = path.join(basePath, `${nomeArquivo}_pfp.png`);
 
     // Verificando se o arquivo nomeArquivo existe
     if (fs.existsSync(filePath)) {
@@ -57,25 +57,21 @@ function gerarQRCODE(user) {
             accessKey = user.nif.toString().padStart(20, '0');
             break;
 
-        default:
-            return res.status(400).json({ msg: "Usuário com cargo não identificado" })
-            break;
     }
 
     return `https://api.qrserver.com/v1/create-qr-code/?data=${accessKey}&amp;size=100x100`
 }
 
-router.get('/me/fotoperfil', validarToken(false), (req, res) => {
+router.get('/me/fotoperfil', validarToken(false), async (req, res) => {
     let id = req.decoded.id
-    const user = userManager.findUserByKey({ id: id })
+    const user = await userManager.findUserByKey({ id: id })
 
 
     if (!user) {
         return res.status(404).json({ msg: "Usuário não encontrado." })
     }
 
-    let profileImagePath = buscarFoto(user.foto_perfil)
-    console.log(user.foto_perfil)
+    let profileImagePath = buscarFoto(user.matricula)
 
     if (!profileImagePath) {
         return res.status(404).json({ msg: "Imagem de perfil não encontrada." });
@@ -83,30 +79,12 @@ router.get('/me/fotoperfil', validarToken(false), (req, res) => {
     return res.sendFile(profileImagePath);
 })
 
-router.get('/me/access', validarToken(false), (req, res) => {
+router.get('/me/access', validarToken(false), async (req, res) => {
     const userId = req.decoded.id;
-    const user = userManager.findUserByKey({ id: userId });
+    const user = await userManager.findUserByKey({ id: userId });
 
-    // Obtém o horário de entrada do usuário
+    return res.status(200).json({ url: gerarQRCODE(user) })
 
-    const minutosDeAtraso = calcularMinutosDeAtraso(user)
-
-    const TOLERANCIA_MIN = 15; // minutos
-    const TOLERANCIA_MAX = 60; // minutos
-
-    console.log(minutosDeAtraso)
-    if (minutosDeAtraso >= TOLERANCIA_MIN) {
-        // Aluno atrasado.
-        const atrasoId = delayManager.registerLateEntry(userId, minutosDeAtraso);
-
-        if (atrasoId) {
-            return res.status(200).json({ url: gerarQRCODE(user), atraso_id: atrasoId })
-        }
-    } else {
-        // Aluno não atrasado.
-        return res.status(200).json({ url: gerarQRCODE(user) })
-
-    }
 })
 
 export default router;

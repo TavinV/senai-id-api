@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import { userManager } from "../modules/user_manager.js";
+import Aluno from "../models/aluno_model.js";
+
 // Middleware para verificar a validade de um Token JWT, e pode verificar permissões.
 const validarToken = (verificarCargo = false) => (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -15,8 +17,10 @@ const validarToken = (verificarCargo = false) => (req, res, next) => {
     const secret = process.env.SECRET || 'produção'
 
     jwt.verify(token, secret, (err, decoded) => {
+        if (!decoded) {
+            return res.status(400).json({ msg: "Token inválido." });
+        }
         const user = userManager.findUserByKey({ id: decoded.id });
-
         if (err) {
             return res.status(403).json({ msg: "Token inválido." });
         }

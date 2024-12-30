@@ -1,9 +1,6 @@
-import express, { response } from 'express'
+import express from 'express'
 
 // Modulos Node
-import path from 'path'
-import { fileURLToPath } from 'url';
-import multer from 'multer';
 import moment from 'moment';
 import { console } from 'inspector';
 
@@ -11,37 +8,27 @@ import { console } from 'inspector';
 
 import { delayManager } from '../modules/student_delay_manager.js'
 import { userManager } from '../modules/user_manager.js';
+import { protegerSenhaUsuario } from '../modules/criptografar.js';
 
 // Middleware
 import validarToken from '../middleware/auth_jwt.js'; // Middleware para verificar as permições com JWT
+import { upload } from "../middleware/multer.js";
+import { validarAluno } from '../middleware/validar_user_body.js';
 
-// Schemas
-import { verificarAluno } from '../schemas/schemas.js'
-import { verificarFuncionario } from '../schemas/schemas.js'
+// Modelos MongoDB
 
-
-// Para utilizar o __filename e __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import Aluno from '../models/aluno_model.js';
+import mongoose from 'mongoose';
 
 const router = express.Router()
 
-// Configurando o Multer
+// Função para criar ID de usuario
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '../db/fotos_perfil'))
-    },
-    filename: (req, file, cb) => {
-        const chavePrimaria = req.body.matricula || req.body.nif;
-        if (!chavePrimaria) {
-            return cb(new Error("Matrícula é necessária para nomear o arquivo"));
-        }
-        cb(null, `${chavePrimaria}_pfp${path.extname(file.originalname)}`);
-    }
-});
+const criarUID = () => {
+    const id = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    return id;
+}
 
-const upload = multer({ storage: storage });
 
 /* ---------------------------------------------------------
 
@@ -54,14 +41,14 @@ const upload = multer({ storage: storage });
 
 
 // Busca as informações do usuário que está loggado na conta com base no token que é enviado.
-router.get('/user/me', validarToken(true), (req, res) => {
+router.get('/user/me', validarToken(true), async (req, res) => {
     const decodedInfo = req.decoded;
 
     if (!decodedInfo) {
         return res.status(404).json({ msg: "Usuario não encontrado." })
     } else {
         const id = decodedInfo.id
-        const user = userManager.findUserByKey({ id: id })
+        const user = await userManager.findUserByKey({ id: id })
 
 
         if (user) {
@@ -76,28 +63,25 @@ router.get('/user/me', validarToken(true), (req, res) => {
 router.post(
     '/registrar/aluno',
     validarToken(true), // Primeiro valida o token
-    upload.single('foto_perfil'), // Só processa o upload após a validação
+    upload.single('foto_perfil'), // Fazendo o upload da foto de perfil
+    validarAluno, // Agora iremos validar usando o JOI
+
     async (req, res) => {
+        const uid = criarUID()
+        const usuario = protegerSenhaUsuario(req.body)
 
-        const aluno = req.body;
-        const [statusVerificacao, message] = verificarAluno(aluno)
+        usuario.id = uid
+        usuario.senha_foi_alterada = false // O usuário acavou de ser criado, portanto está com a senha padrão
+        usuario.email = `${uid}@naotememail.com`
+        try {
+            const novoAluno = await Aluno.create(usuario)
+            return res.status(201).json({ msg: `Aluno ${novoAluno.nome} criado com sucesso!`, UID_aluno: novoAluno.id })
+        } catch (error) {
+            let mensagemErro
+            if (error.name === 'MongoError' && error.code === 11000) {
+                // Há uma tentativa de ou criar uma conta com o mesmo Rg, Id, email, ou matricula que outra já existente.
 
-        if (!req.file) {
-            return res.status(400).json({ error: "Campo obrigatório ausente: foto_perfil" });
-        }
-
-        if (statusVerificacao != 200) {
-            return res.status(400).json({ message })
-        }
-        else {
-            try {
-                aluno.foto = req.file.filename
-
-                userManager.registerUser(aluno);
-                return res.status(201).json({ msg: "Usuário registrado com sucesso." });
-            } catch (error) {
-                console.error(error);
-                return res.status(500).json({ msg: `Erro ao registrar aluno. ${error}` });
+                return res.status(500).json({ msg: `Já há um usuário com esses dados:s`, error })
             }
         }
     }
@@ -109,7 +93,6 @@ router.post(
     validarToken(true), // Primeiro valida o token
     upload.single('foto_perfil'), // Só processa o upload após a validação
     async (req, res) => {
-
         const funcionario = req.body
         const [statusVerificacao, message] = verificarFuncionario(funcionario)
 
