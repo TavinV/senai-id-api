@@ -17,8 +17,8 @@ import { validarAluno } from '../middleware/validar_user_body.js';
 
 // Modelos MongoDB
 
-import Aluno from '../models/aluno_model.js';
 import mongoose from 'mongoose';
+import User from '../models/user_model.js';
 
 const router = express.Router()
 
@@ -73,15 +73,16 @@ router.post(
         usuario.id = uid
         usuario.senha_foi_alterada = false // O usuário acavou de ser criado, portanto está com a senha padrão
         usuario.email = `${uid}@naotememail.com`
+        usuario.cargo = "aluno"
         try {
-            const novoAluno = await Aluno.create(usuario)
+            const novoAluno = await User.create(usuario)
             return res.status(201).json({ msg: `Aluno ${novoAluno.nome} criado com sucesso!`, UID_aluno: novoAluno.id })
         } catch (error) {
-            let mensagemErro
-            if (error.name === 'MongoError' && error.code === 11000) {
+            // return res.status(500).json(error.code)
+            if (error.code === 11000) {
                 // Há uma tentativa de ou criar uma conta com o mesmo Rg, Id, email, ou matricula que outra já existente.
 
-                return res.status(500).json({ msg: `Já há um usuário com esses dados:s`, error })
+                return res.status(500).json({ msg: `Já há um usuário com esses dados`, error })
             }
         }
     }
@@ -125,7 +126,6 @@ router.post('/users/validaratraso/:idatraso', validarToken(true), async (req, re
     let [comprovante, erro, status] = delayManager.validateEntry(id_atraso, responsavel, professor, horario, data, motivo)
     return res.status(status || 500).json({ comprovante, erro, status })
 })
-
 
 
 export default router;

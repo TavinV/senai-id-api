@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import * as criptografar from './criptografar.js';
-import Aluno from '../models/aluno_model.js';
+import User from '../models/user_model.js';
 
 class UserManager {
 
@@ -10,7 +10,7 @@ class UserManager {
   async findUserByLoginAndPassword(loginFornecido, senha) {
 
     try {
-      const alunoComLogin = await Aluno.findOne({ login: loginFornecido });
+      const alunoComLogin = await User.findOne({ login: loginFornecido });
       if (alunoComLogin) {
         const senhaCriptografada = criptografar.criarHash(senha, alunoComLogin.salt);
 
@@ -27,7 +27,7 @@ class UserManager {
   }
 
   findUserByKey(criteria) {
-    return Aluno.findOne(criteria)
+    return User.findOne(criteria)
   }
 
 }
