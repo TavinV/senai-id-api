@@ -24,6 +24,7 @@ async function sendMail(to, subject, html) {
     }
 
     const emailDetails = await transporter.sendMail(mailInfo)
+
     if (emailDetails.accepted.length > 0) {
         return [emailDetails, null]
     } else {

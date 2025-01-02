@@ -1,5 +1,4 @@
 import express from 'express'
-import { userManager } from '../modules/user_manager.js';
 import Otp from '../models/email_verification_OTP_model.js'
 import User from '../models/user_model.js';
 import { sendOTPVerification } from '../controllers/nodemailer.js'
@@ -63,8 +62,11 @@ router.post('/validate/otp', async (req, res) => {
 
             if (resultado.matchedCount === 0) {
                 return res.status(404).json({ msg: "Não encontramos esse usuário." })
+
             } else if (resultado.modifiedCount > 0) {
+                const resultadoOtpsDeletados = await Otp.deleteMany({ userId: userID }) // Apagando todas as OTPS registradas para um unico usuario
                 return res.status(200).json({ msg: "Seu email foi verificado." })
+
             } else {
                 console.log('O email já estava atualizado.');
             }
