@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema(
             enum: ["aluno", "funcionario", "secretaria"]
         },
         rg: {
-            type: String
+            type: String,
+            unique: true,
+            sparse: true
         },
         salt: {
             type: String,
@@ -34,7 +36,6 @@ const userSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            unique: true,
             sparse: true // Permite emails únicos ou campos vazios
         },
         data_nascimento: {
@@ -55,7 +56,8 @@ const userSchema = new mongoose.Schema(
         },
         matricula: {
             type: String,
-            unique: true // Apenas para alunos
+            unique: true, // Apenas para alunos
+            sparse: true
         },
         senha_padrao: {
             type: String // Apenas para alunos
@@ -65,15 +67,24 @@ const userSchema = new mongoose.Schema(
             default: false // Apenas para alunos
         },
         // Campos específicos para Funcionário
+        descricao: {
+            type: String,
+            sparse: true
+        },
         cpf: {
             type: String,
+            sparse: true,
             unique: true // Apenas para funcionários
         },
         pis: {
-            type: String // Apenas para funcionários
+            type: String, // Apenas para funcionários
+            sparse: true,
+            unique: true
         },
         nif: {
-            type: String // Apenas para funcionários
+            type: String, // Apenas para funcionários
+            sparse: true,
+            unique: true
         },
     },
     {

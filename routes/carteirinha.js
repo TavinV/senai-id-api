@@ -1,12 +1,20 @@
 import express, { response } from 'express'
+
+// Modulos node
 import path from 'path'
 import fs from 'fs'
-import { fileURLToPath } from 'url';
-import validarToken from '../middleware/auth_jwt.js'
-import { userManager } from '../modules/user_manager.js'
-import User from '../models/user_model.js';
-import { delayManager } from '../modules/student_delay_manager.js'
 import moment from 'moment';
+import { fileURLToPath } from 'url';
+
+// Modulos
+import { userManager } from '../modules/user_manager.js'
+import { delayManager } from '../modules/student_delay_manager.js'
+
+// Middleware
+import validarToken from '../middlewares/auth_jwt.js'
+
+// Modelos MongoDb
+import User from '../models/user_model.js';
 
 // Para utilizar o __filename e __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -14,17 +22,7 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router()
 
-// Rota que é executada ao entrar na página de carteirinha, verifica a validade do Token e expulsa o usuário caso não seja um token válido.
-router.get('/me', validarToken(false), async (req, res) => {
-    const id = req.decoded.id
-    const user = await userManager.findUserByKey({ id: id })
-
-    if (!user) {
-        return res.status(404).json({ msg: "Usuário não encontrado." });
-    } else {
-        return res.status(200).json({ user });
-    }
-})
+// Utilitários
 
 function buscarFoto(nomeArquivo) {
     // Diretório aonde estão as fotos de perfil
@@ -62,6 +60,28 @@ function gerarQRCODE(user) {
 
     return `https://api.qrserver.com/v1/create-qr-code/?data=${accessKey}&amp;size=100x100`
 }
+
+
+/* ---------------------------------------------------------
+
+
+    ROTAS
+
+
+------------------------------------------------------------*/
+
+// Rota que é executada ao entrar na página de carteirinha, verifica a validade do Token e expulsa o usuário caso não seja um token válido.
+router.get('/me', validarToken(false), async (req, res) => {
+    const id = req.decoded.id
+    const user = await userManager.findUserByKey({ id: id })
+
+    if (!user) {
+        return res.status(404).json({ msg: "Usuário não encontrado." });
+    } else {
+        return res.status(200).json({ user });
+    }
+})
+
 
 router.get('/me/fotoperfil', validarToken(false), async (req, res) => {
     let id = req.decoded.id

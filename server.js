@@ -11,6 +11,7 @@ import secretaria from './routes/secretaria.js'
 import login from './routes/login.js'
 import carteirinha from './routes/carteirinha.js'
 import rerouter from './routes/rerouter.js'
+import verification from './routes/verification.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,9 +35,13 @@ app.use('/api/rerouter', rerouter)
 app.use('/api/secretaria', secretaria)
 app.use('/api/login', login)
 app.use('/api/carteirinha', carteirinha)
+app.use('/api/verification', verification)
 
-connectDB().then(() => {
+
+
+connectDB().then(async () => {
     app.listen(port, () => console.log(`Servidor ativo na porta ${port}`))
+
 }).catch((erro_conexao) => {
     console.log("Conexão com o banco de dados falhou.")
     console.log(erro_conexao)

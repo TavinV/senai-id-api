@@ -15,7 +15,9 @@ export function protegerSenhaUsuario(usuario) {
 
     usuario.senha = senhaSegura
     usuario.salt = salt
-    usuario.senha_padrao = senha
+    if (usuario.cargo != 'funcionario') {
+        usuario.senha_padrao = senha
+    }
 
     return usuario
 }

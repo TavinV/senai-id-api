@@ -11,13 +11,12 @@ import { userManager } from '../modules/user_manager.js';
 import { protegerSenhaUsuario } from '../modules/criptografar.js';
 
 // Middleware
-import validarToken from '../middleware/auth_jwt.js'; // Middleware para verificar as permições com JWT
-import { upload } from "../middleware/multer.js";
-import { validarAluno } from '../middleware/validar_user_body.js';
+import validarToken from '../middlewares/auth_jwt.js'; // Middleware para verificar as permições com JWT
+import { upload } from "../middlewares/multer.js";
+import { validarAluno } from '../middlewares/validar_user_body.js';
+import { validarFuncionario } from '../middlewares/validar_user_body.js';
 
 // Modelos MongoDB
-
-import mongoose from 'mongoose';
 import User from '../models/user_model.js';
 
 const router = express.Router()
@@ -59,7 +58,7 @@ router.get('/user/me', validarToken(true), async (req, res) => {
     }
 })
 
-// Registra novos alunos, validando as permissões com JWT e enviando a sua foto na pasta através do multer.
+// Registra novos alunos
 router.post(
     '/registrar/aluno',
     validarToken(true), // Primeiro valida o token
@@ -72,7 +71,7 @@ router.post(
 
         usuario.id = uid
         usuario.senha_foi_alterada = false // O usuário acavou de ser criado, portanto está com a senha padrão
-        usuario.email = `${uid}@naotememail.com`
+        usuario.email = ``
         usuario.cargo = "aluno"
         try {
             const novoAluno = await User.create(usuario)
@@ -88,33 +87,34 @@ router.post(
     }
 );
 
-// Registra novos alunos, validando as permissões com JWT e enviando a sua foto na pasta através do multer.
+// Registrando novos funcionários
 router.post(
     '/registrar/funcionario',
     validarToken(true), // Primeiro valida o token
-    upload.single('foto_perfil'), // Só processa o upload após a validação
+    upload.single('foto_perfil'), // Fazendo o upload da foto de perfil
+    validarFuncionario, // Agora iremos validar usando o JOI
+
     async (req, res) => {
-        const funcionario = req.body
-        const [statusVerificacao, message] = verificarFuncionario(funcionario)
+        const uid = criarUID()
 
-        if (!req.file) {
-            return res.status(400).json({ error: "Campo obrigatório ausente: foto_perfil" });
-        }
+        const usuario = protegerSenhaUsuario(req.body)
+        usuario.id = uid
+        usuario.cargo = "funcionario"
+        usuario.senha_padrao = ""
 
-        if (statusVerificacao != 200) {
-            return res.status(400).json({ message })
-        } else {
-            try {
-                funcionario.foto = req.file.filename
-                userManager.registerUser(funcionario);
+        try {
+            const novoFuncionario = await User.create(usuario)
+            return res.status(201).json({ msg: `Funcionario ${novoAluno.nome} criado com sucesso!`, UID_funcionadio: novoFuncionario.id })
+        } catch (error) {
+            if (error.code === 11000) {
+                // Há uma tentativa de ou criar uma conta com o mesmo Rg, Id, email, ou matricula que outra já existente.
 
-                return res.status(201).json({ msg: "Funcionário registrado com sucesso." });
-            } catch (error) {
-                return res.status(500).json({ msg: `Erro ao registrar funcionário. ${error}` });
+                return res.status(500).json({ msg: `Já há um usuário com esses dados`, error })
             }
         }
     }
 );
+
 
 router.post('/users/validaratraso/:idatraso', validarToken(true), async (req, res) => {
     const id_atraso = req.params.idatraso;
@@ -127,5 +127,26 @@ router.post('/users/validaratraso/:idatraso', validarToken(true), async (req, re
     return res.status(status || 500).json({ comprovante, erro, status })
 })
 
+router.post('/iniciar', async (req, res) => {
+    try {
+        const secretaria = await User.create({
+
+            "id": 0,
+            "nome": "Secretaria Senai Nami Jafet",
+            "cargo": "secretaria",
+            "login": "secretaria117",
+            "senha": "5yUuYL+x1QWa2CNZ9bE+WjRs7DL1NIf/xGsE2rRkFyk=",
+            "salt": "hwridqul519"
+        })
+
+        if (secretaria) {
+            return res.status(201).json({ msg: "Secretaria criada com sucesso." })
+        }
+
+    } catch (error) {
+        return res.status(500).json({ msg: "Erro ao criar secretaria.", error })
+    }
+
+})
 
 export default router;
